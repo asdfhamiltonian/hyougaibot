@@ -1,8 +1,9 @@
 # encoding: utf-8
 '''
-This package uses the KANJIDIC dictionary file. (see http://www.csse.monash.edu.au/~jwb/kanjidic.html)
-Theis file is the property of the Electronic Dictionary Research and Development Group,
-and is used in conformance with the Group's licence.
+This package uses the KANJIDIC dictionary file.
+This file is the property of the Electronic Dictionary Research and
+Development Group, and is used in conformance with the Group's license.
+(see http://www.csse.monash.edu.au/~jwb/kanjidic.html)
 '''
 
 import os.path
@@ -62,22 +63,26 @@ if not os.path.isfile("kanjiPickle.p"):
             kunyomi = []
             nanori = []
 
-            if (kanji.find('reading_meaning') is not None) and (kanji.find('reading_meaning')[0] is not None):
+            if ((kanji.find('reading_meaning') is not None) and
+                    (kanji.find('reading_meaning')[0] is not None)):
                 for child in kanji.find('reading_meaning')[0]:
-                    #python seems to behave badly with series of if statements,
-                    #preferred this to be set up as if, elif, elif, else
+                    '''python seems to behave badly with series of ifs
+                    preferred this to be set up as if, elif, elif, else'''
                     if (child.tag == "meaning") and (child.attrib == {}):
                         meaning.append(child.text)
-                    elif ("r_type" in child.attrib) and (child.attrib["r_type"] == "ja_on"):
+                    elif (("r_type" in child.attrib) and
+                            (child.attrib["r_type"] == "ja_on")):
                         onyomi.append(child.text)
-                    elif ("r_type" in child.attrib) and (child.attrib["r_type"] == "ja_kun"):
+                    elif (("r_type" in child.attrib) and
+                            (child.attrib["r_type"] == "ja_kun")):
                         kunyomi.append(child.text)
                     else:
                         pass
             else:
                 pass
 
-            #nanori is in a different level of the xml file
+            '''nanori readings are in a higher level in the xml file than
+            the on/kun readings for some reason'''
             if kanji.find('reading_meaning') is not None:
                 for child in kanji.find('reading_meaning'):
                     if child.tag == "nanori":
@@ -99,22 +104,34 @@ else:
 
 reference_list = []
 for key in masterDictionary:
-    reference = key
+    reference = ""
+
     if "moro_number" in masterDictionary[key]:
-        reference += " M" + masterDictionary[key]["moro_number"]
+        reference += " (Morohashi " + masterDictionary[key]["moro_number"]
     else:
         pass
-    for entry in masterDictionary[key]["meaning"]:
-        reference += " " + entry + ","
+    if "Nelson" in masterDictionary[key]:
+        reference += ", Nelson " + masterDictionary[key]["Nelson"]
+    else:
+        pass
+    if "moro_number" in masterDictionary[key]:
+        reference += ")"
+
+    reference += " " + key
+
     for entry in masterDictionary[key]["ja_on"]:
         reference += " " + entry + ","
     for entry in masterDictionary[key]["ja_kun"]:
         reference += " " + entry + ","
+    for entry in masterDictionary[key]["meaning"]:
+        reference += " " + entry + ","
     if reference[len(reference) - 1] == ",":
         reference = reference[:len(reference) - 1]
+
     reference_list.append(reference)
 
+print(len(reference_list))
 a = 0
-while a < 100:
+while a < 1000:
     print(random.choice(reference_list))
     a += 1
