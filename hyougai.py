@@ -5,8 +5,8 @@ This file is the property of the Electronic Dictionary Research and
 Development Group, and is used in conformance with the Group's license.
 (see http://www.csse.monash.edu.au/~jwb/kanjidic.html)
 -----
-significant parts of the twitter interface design for this bot
-were borrowed from/inspired by github user tpinecone's
+significant parts of the twitter interface for this bot
+were adapted from/inspired by github user tpinecone's
 hello-world-bot
 '''
 
@@ -140,12 +140,6 @@ if not os.path.isfile("definitionListPickle.p"):
 else:
     reference_list = pickle.load(open("definitionListPickle.p", "rb"))
 
-"""
-a = 0
-while a < 1000:
-    print(random.choice(reference_list))
-    a += 1
-"""
 
 # ran an analysis on reference_list, and it turns out there are 6 items longer
 # than 140 characters. However, they only need to be split up into a maximum
@@ -176,11 +170,5 @@ def get_next_definition():
     pickle.dump(reference_list, open("definitionListPickle.p", "wb"))
     return message
 
-"""
-for i in range(0, 20):
-    print(get_next_definition())
-"""
-
 tweet(get_next_definition())
 
-# tweet("The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox...")
